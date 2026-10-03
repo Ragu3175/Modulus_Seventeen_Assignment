@@ -59,11 +59,21 @@
       <div class="api-status-card" id="apiStatusCard">
         <div class="status-indicator-row">
           <span class="status-dot active"></span>
-          <span class="status-label">Backend REST API: <strong id="apiStatusText">Ready / Connected</strong></span>
+          <span class="status-label">Backend REST API: <strong id="apiStatusText">Connected (Atlas Cloud)</strong></span>
         </div>
         <div class="api-endpoints-hint">
-          <code>POST /api/auth/register</code> • <code>POST /api/auth/login</code> • <code>GET /api/tasks?sort=smart</code>
+          <code>POST /api/auth/login</code> • <code>POST /api/tasks</code> • <code>GET /api/tasks?sort=smart</code>
         </div>
+      </div>
+
+      <!-- In-Browser 1-Click HD Demo Video Recorder -->
+      <div class="recorder-card" id="recorderCard">
+        <div class="recorder-header">
+          <span class="rec-title">📹 Built-in HD Screen Recorder</span>
+          <span class="rec-badge" id="recBadge" style="display:none;"><span class="rec-dot"></span> <span id="recTimer">00:00</span></span>
+        </div>
+        <p class="rec-desc">Capture a crystal-clear 1080p demo video directly in your browser without any external software.</p>
+        <button class="btn btn-record btn-block" id="btnToggleRecord">⏺️ Start HD Screen Recording</button>
       </div>
 
       <!-- Quick Test Actions -->

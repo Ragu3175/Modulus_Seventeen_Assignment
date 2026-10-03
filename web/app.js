@@ -461,3 +461,94 @@ document.getElementById('btnSeedDemo').addEventListener('click', () => {
 document.getElementById('btnTestAlgo').addEventListener('click', () => {
   alert('Smart Urgency Mix Algorithm Test Passed! 7/7 automated checks verified.');
 });
+
+// Built-in HD Screen Recording System
+let mediaRecorder = null;
+let recordedChunks = [];
+let recordTimerInterval = null;
+let recordSeconds = 0;
+
+const btnToggleRecord = document.getElementById('btnToggleRecord');
+const recBadge = document.getElementById('recBadge');
+const recTimer = document.getElementById('recTimer');
+
+if (btnToggleRecord) {
+  btnToggleRecord.addEventListener('click', async () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      // Stop Recording
+      mediaRecorder.stop();
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        video: { frameRate: 60, displaySurface: 'browser' },
+        audio: false,
+      });
+
+      recordedChunks = [];
+      const options = { mimeType: 'video/webm; codecs=vp9' };
+      mediaRecorder = new MediaRecorder(stream, MediaRecorder.isTypeSupported('video/webm; codecs=vp9') ? options : {});
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          recordedChunks.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        clearInterval(recordTimerInterval);
+        recBadge.style.display = 'none';
+        btnToggleRecord.innerText = '⏺️ Start HD Screen Recording';
+        btnToggleRecord.classList.remove('recording');
+
+        // Stop all tracks
+        stream.getTracks().forEach((track) => track.stop());
+
+        // Create Blob and trigger download
+        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `Modulus_Task_App_Demo_${Date.now()}.webm`;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        }, 100);
+
+        alert('🎉 Video recorded successfully!\n\nYour HD demo video has been downloaded to your Downloads folder.\nUpload it to Google Drive and copy the link to your form.');
+      };
+
+      // Handle user clicking "Stop sharing" from browser bar
+      stream.getVideoTracks()[0].onended = () => {
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+          mediaRecorder.stop();
+        }
+      };
+
+      mediaRecorder.start(1000); // 1-second chunks
+
+      // UI State: Recording
+      recordSeconds = 0;
+      recBadge.style.display = 'inline-flex';
+      btnToggleRecord.innerText = '⏹️ Stop & Save HD Video';
+      btnToggleRecord.classList.add('recording');
+
+      recordTimerInterval = setInterval(() => {
+        recordSeconds++;
+        const mins = String(Math.floor(recordSeconds / 60)).padStart(2, '0');
+        const secs = String(recordSeconds % 60).padStart(2, '0');
+        recTimer.innerText = `${mins}:${secs}`;
+      }, 1000);
+
+    } catch (err) {
+      if (err.name !== 'NotAllowedError') {
+        alert('Screen recording error: ' + err.message);
+      }
+    }
+  });
+}
+
