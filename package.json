@@ -1,0 +1,26 @@
+{
+  "name": "modulus-seventeen-todo-assignment",
+  "version": "1.0.0",
+  "description": "Full-Stack React Native & MongoDB To-Do Application with JWT Authentication and Smart Urgency Mix Algorithm",
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "build:backend": "cd backend && npm run build",
+    "start:backend": "cd backend && npm start",
+    "test:backend": "cd backend && npm test",
+    "seed:backend": "cd backend && npm run seed",
+    "start:mobile": "cd mobile && npm start",
+    "android": "cd mobile && npm run android",
+    "ios": "cd mobile && npm run ios"
+  },
+  "keywords": [
+    "react-native",
+    "mongodb",
+    "express",
+    "typescript",
+    "jwt",
+    "todo-app",
+    "modulus-seventeen"
+  ],
+  "author": "Modulus Seventeen Candidate",
+  "license": "MIT"
+}

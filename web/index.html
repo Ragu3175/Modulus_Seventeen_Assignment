@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modulus Task - React Native & MongoDB To-Do Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Left: Showcase & Documentation Sidebar -->
+    <aside class="sidebar">
+      <div class="brand-badge">
+        <span class="sparkle-icon">⚡</span>
+        <span class="brand-title">MODULUS SEVENTEEN</span>
+      </div>
+      
+      <h1 class="main-heading">React Native To-Do App with JWT & MongoDB</h1>
+      <p class="subtitle">A full-stack mobile assignment featuring custom JWT authentication, Mongoose database models, and the <strong>Smart Urgency & Priority Mix Algorithm</strong>.</p>
+      
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <div class="feature-info">
+            <h3>JWT Authentication</h3>
+            <p>Bcrypt hashing, protected Bearer routes & session persistence.</p>
+          </div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-info">
+            <h3>Smart Mix Algorithm</h3>
+            <p>Dynamic scoring combining Base Priority (Urgent/High/Med/Low) + Deadline Urgency Decay + Starvation Prevention.</p>
+          </div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🗄️</div>
+          <div class="feature-info">
+            <h3>Node.js & MongoDB</h3>
+            <p>RESTful CRUD API with Mongoose schemas, pagination & analytics.</p>
+          </div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <div class="feature-info">
+            <h3>Dark Neo-Glassmorphism</h3>
+            <p>Custom Obsidian design system with glowing accents & badges.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live API Status Indicator -->
+      <div class="api-status-card" id="apiStatusCard">
+        <div class="status-indicator-row">
+          <span class="status-dot active"></span>
+          <span class="status-label">Backend REST API: <strong id="apiStatusText">Ready / Connected</strong></span>
+        </div>
+        <div class="api-endpoints-hint">
+          <code>POST /api/auth/register</code> • <code>POST /api/auth/login</code> • <code>GET /api/tasks?sort=smart</code>
+        </div>
+      </div>
+
+      <!-- Quick Test Actions -->
+      <div class="quick-actions">
+        <button class="btn btn-secondary btn-sm" id="btnSeedDemo">🌱 Seed Sample Tasks</button>
+        <button class="btn btn-secondary btn-sm" id="btnTestAlgo">🧪 Test Algorithm</button>
+      </div>
+    </aside>
+
+    <!-- Right: Realistic Android Device Simulator Frame -->
+    <main class="device-showcase">
+      <div class="phone-frame">
+        <div class="phone-speaker"></div>
+        <div class="phone-camera"></div>
+        
+        <!-- Mobile App Screen Container -->
+        <div class="phone-screen" id="phoneScreen">
+          
+          <!-- Screen 1: Auth (Login/Register) View -->
+          <div class="app-view" id="authView">
+            <div class="auth-header">
+              <div class="auth-logo">⚡</div>
+              <h2 class="auth-title">Modulus Task</h2>
+              <p class="auth-sub">Smart Urgency • Task Matrix</p>
+            </div>
+
+            <div class="glass-form-card">
+              <div class="tab-toggle">
+                <button class="tab-btn active" id="tabLogin">Sign In</button>
+                <button class="tab-btn" id="tabRegister">Register</button>
+              </div>
+
+              <!-- Login Form -->
+              <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                  <label>Email Address</label>
+                  <input type="email" id="loginEmail" value="alex@example.com" placeholder="name@example.com" required>
+                </div>
+                <div class="form-group">
+                  <label>Password</label>
+                  <input type="password" id="loginPassword" value="password123" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" id="btnLoginSubmit">Sign In</button>
+                <button type="button" class="btn btn-demo btn-block" id="btn1TapDemo">⚡ 1-Tap Demo Sign In</button>
+              </form>
+
+              <!-- Register Form -->
+              <form id="registerForm" class="auth-form hidden">
+                <div class="form-group">
+                  <label>Full Name</label>
+                  <input type="text" id="regName" placeholder="Sarah Connor" required>
+                </div>
+                <div class="form-group">
+                  <label>Email Address</label>
+                  <input type="email" id="regEmail" placeholder="sarah@example.com" required>
+                </div>
+                <div class="form-group">
+                  <label>Password</label>
+                  <input type="password" id="regPassword" placeholder="Min 6 chars" required minlength="6">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" id="btnRegisterSubmit">Create Account</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Screen 2: Main Dashboard View -->
+          <div class="app-view hidden" id="mainView">
+            <!-- Mobile Top Bar -->
+            <header class="mobile-header">
+              <div class="user-greeting">
+                <h3 id="userGreeting">Hello, Alex 👋</h3>
+                <span class="mobile-date" id="mobileDate">Saturday, Oct 3</span>
+              </div>
+              <div class="user-avatar" id="headerAvatar">A</div>
+            </header>
+
+            <!-- Scrollable Content Area -->
+            <div class="mobile-scrollable">
+              
+              <!-- Productivity Widget -->
+              <div class="pulse-widget">
+                <div class="pulse-top">
+                  <div>
+                    <span class="pulse-label">Productivity Pulse</span>
+                    <h4 class="pulse-count" id="pulseCompletionSummary">3 of 5 tasks done</h4>
+                  </div>
+                  <div class="pulse-pill" id="pulseRatePill">60%</div>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill" id="pulseProgressFill" style="width: 60%;"></div>
+                </div>
+                <div class="pulse-stats-row">
+                  <div class="pulse-stat"><strong id="statPending">2</strong><span>Pending</span></div>
+                  <div class="pulse-stat"><strong id="statDone">3</strong><span>Done</span></div>
+                  <div class="pulse-stat alert"><strong id="statOverdue">1</strong><span>Overdue</span></div>
+                </div>
+              </div>
+
+              <!-- Search & Filter Controls -->
+              <div class="search-row">
+                <div class="search-input-wrap">
+                  <span class="search-icon">🔍</span>
+                  <input type="text" id="searchInput" placeholder="Search tasks...">
+                </div>
+                <button class="filter-toggle-btn" id="btnOpenFilter">
+                  <span>⚙️</span>
+                  <span class="filter-badge" id="filterBadge">0</span>
+                </button>
+              </div>
+
+              <!-- Category Filter Chips -->
+              <div class="category-scroll">
+                <button class="cat-chip active" data-cat="all">All</button>
+                <button class="cat-chip" data-cat="work">💼 Work</button>
+                <button class="cat-chip" data-cat="project">🚀 Project</button>
+                <button class="cat-chip" data-cat="study">📚 Study</button>
+                <button class="cat-chip" data-cat="health">🏃 Health</button>
+                <button class="cat-chip" data-cat="finance">💰 Finance</button>
+              </div>
+
+              <!-- Tasks Feed Header -->
+              <div class="feed-header">
+                <span class="feed-title" id="feedTitle">Priority Feed (5)</span>
+                <span class="algo-indicator" id="algoIndicator">⚡ Smart Mix Active</span>
+              </div>
+
+              <!-- Tasks List Container -->
+              <div class="tasks-container" id="tasksList">
+                <!-- Dynamically Rendered Task Cards -->
+              </div>
+            </div>
+
+            <!-- Floating Action Button -->
+            <button class="fab-btn" id="btnOpenCreateModal">+</button>
+
+            <!-- Bottom Navigation Tabs -->
+            <nav class="mobile-tabs">
+              <button class="tab-item active" id="tabNavTasks">
+                <span class="tab-icon">📋</span>
+                <span class="tab-label">Tasks</span>
+              </button>
+              <button class="tab-item" id="tabNavAnalytics">
+                <span class="tab-icon">📊</span>
+                <span class="tab-label">Analytics</span>
+              </button>
+              <button class="tab-item" id="tabNavProfile">
+                <span class="tab-icon">👤</span>
+                <span class="tab-label">Profile</span>
+              </button>
+            </nav>
+          </div>
+
+          <!-- Create/Edit Task Modal -->
+          <div class="modal-overlay hidden" id="taskModal">
+            <div class="modal-sheet">
+              <div class="modal-header">
+                <h3 id="modalTitle">New Task</h3>
+                <button class="modal-close" id="btnCloseModal">✕</button>
+              </div>
+              <form id="taskForm" class="modal-body">
+                <input type="hidden" id="editTaskId">
+                
+                <div class="form-group">
+                  <label>Title *</label>
+                  <input type="text" id="taskTitle" placeholder="What needs to be done?" required>
+                </div>
+
+                <div class="form-group">
+                  <label>Description</label>
+                  <textarea id="taskDesc" rows="2" placeholder="Add details..."></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label>Priority Level</label>
+                  <div class="priority-grid">
+                    <label class="p-opt"><input type="radio" name="priority" value="low"><span>🟢 Low</span></label>
+                    <label class="p-opt"><input type="radio" name="priority" value="medium" checked><span>🔵 Med</span></label>
+                    <label class="p-opt"><input type="radio" name="priority" value="high"><span>🟠 High</span></label>
+                    <label class="p-opt"><input type="radio" name="priority" value="urgent"><span>🔴 Urgent</span></label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Category</label>
+                  <select id="taskCategory" class="custom-select">
+                    <option value="work">💼 Work</option>
+                    <option value="personal">🧘 Personal</option>
+                    <option value="study">📚 Study</option>
+                    <option value="health">🏃 Health</option>
+                    <option value="finance">💰 Finance</option>
+                    <option value="project">🚀 Project</option>
+                    <option value="other">📌 Other</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Deadline Preset</label>
+                  <div class="preset-buttons">
+                    <button type="button" class="preset-btn" data-hours="2">+2 Hours</button>
+                    <button type="button" class="preset-btn" data-hours="8">End of Day</button>
+                    <button type="button" class="preset-btn" data-hours="24">Tomorrow</button>
+                    <button type="button" class="preset-btn" data-hours="72">In 3 Days</button>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" id="btnSaveTask">Save Task</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Filter / Sort Modal -->
+          <div class="modal-overlay hidden" id="filterModal">
+            <div class="modal-sheet">
+              <div class="modal-header">
+                <h3>Filter & Sort</h3>
+                <button class="modal-close" id="btnCloseFilterModal">✕</button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label>Sort Algorithm</label>
+                  <div class="sort-options-list">
+                    <label class="sort-opt-card"><input type="radio" name="sortOpt" value="smart" checked><div><strong>⚡ Smart Urgency Mix</strong><p>Multi-factor: Priority + Deadline Decay + Age</p></div></label>
+                    <label class="sort-opt-card"><input type="radio" name="sortOpt" value="deadline_asc"><div><strong>⏰ Nearest Deadline First</strong><p>Due dates earliest to latest</p></div></label>
+                    <label class="sort-opt-card"><input type="radio" name="sortOpt" value="priority_desc"><div><strong>🚨 Highest Priority First</strong><p>Urgent → High → Medium → Low</p></div></label>
+                    <label class="sort-opt-card"><input type="radio" name="sortOpt" value="created_desc"><div><strong>📅 Recently Added</strong><p>Newest tasks at top</p></div></label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Status Filter</label>
+                  <div class="status-grid">
+                    <label class="p-opt"><input type="radio" name="statusFilter" value="all" checked><span>All</span></label>
+                    <label class="p-opt"><input type="radio" name="statusFilter" value="pending"><span>Pending</span></label>
+                    <label class="p-opt"><input type="radio" name="statusFilter" value="completed"><span>Completed</span></label>
+                  </div>
+                </div>
+
+                <button class="btn btn-primary btn-block" id="btnApplyFilter">Apply Filters</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
